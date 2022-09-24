@@ -1,4 +1,4 @@
-modules.exports = {
+module.exports = {
     categoryWithChildren: `
         WITH RECURSIVE subcategories (id) AS (
             SELECT id FROM categories WHERE ID = ?

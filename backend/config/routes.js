@@ -7,7 +7,7 @@ module.exports = (app) => {
 
   app.route("/users").all(app.config.passport.authenticate()).post(adminMiddleware(app.api.user.save)).get(adminMiddleware(app.api.user.get));
 
-  app.route("/users/:id").all(app.config.passport.authenticate()).put(adminMiddleware(app.api.user.save));
+  app.route("/users/:id").all(app.config.passport.authenticate()).get(adminMiddleware(app.api.user.getById)).put(adminMiddleware(app.api.user.save));
 
   app
     .route("/categories")

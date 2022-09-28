@@ -3,7 +3,7 @@
         <a class="toggle" @click="toggleMenu" v-if="!hideToggle">
             <i class="fa fa-lg" :class="icon"></i>
         </a>
-        <h1 class="title">{{title}}</h1>
+        <h1 class="title"><router-link to="/">{{title}}</router-link></h1>
         <UserDropdown v-if="!hideUserDropdown" />
     </header>
 </template>
@@ -57,7 +57,12 @@ export default {
     text-decoration: none;
 }
 
-header.header > a.toggle {
+.title a:hover {
+    color: #FFF;
+    text-decoration: none;
+}
+
+header.header>a.toggle {
     width: 60px;
     height: 100%;
     color: #FFF;
@@ -69,7 +74,7 @@ header.header > a.toggle {
     align-items: center;
 }
 
-header.header > a.toggle:hover {
+header.header>a.toggle:hover {
     color: #FFF;
     background-color: rgba(0, 0, 0, 0.2);
     cursor: pointer;

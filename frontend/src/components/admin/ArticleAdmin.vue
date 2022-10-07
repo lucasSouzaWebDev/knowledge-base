@@ -41,7 +41,10 @@
         </b-button>
       </template>
     </b-table>
-    <b-pagination size="md" v-model="page" :total-rows="count" :per-page="limit" />
+    <div class="pagination">
+      <b-pagination size="md" v-model="page" :total-rows="count" :per-page="limit" />
+
+    </div>
 
   </div>
 </template>
@@ -142,5 +145,8 @@ export default {
 </script>
   
 <style>
-
+.pagination{
+  display: flex;
+  justify-content: center;
+}
 </style>

@@ -2,6 +2,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 
 module.exports = app => {
-    app.use(bodyParser.json())
-    app.use(cors())
+    app.use(bodyParser.json({limit: '10mb', extended: true}))
+    app.use(cors({limit: '10mb', extended: true}))
 }

@@ -2,51 +2,88 @@
 	<div id="app" :class="{'hide-menu': !isMenuVisible || !user}">
 		<Header title="Lucas de Souza - Base de Conhecimento" :hideToggle="!user" :hideUserDropdown="!user" />
 		<Menu v-if="user" />
-		<Content />
+		<Loading v-if="validatingToken" />
+		<Content v-else />
 		<Footer />
 	</div>
 </template>
 
 <script>
+import axios from 'axios'
+import { baseApiUrl, userKey } from '@/global'
 import { mapState } from 'vuex'
 import Header from '@/components/template/Header'
 import Menu from '@/components/template/Menu'
 import Content from '@/components/template/Content'
 import Footer from '@/components/template/Footer'
+import Loading from '@/components/template/Loading'
 
 export default {
 	name: "App",
-	components: { Header, Menu, Content, Footer },
-	computed: mapState(['isMenuVisible', 'user'])
+	components: { Header, Menu, Content, Footer, Loading },
+	computed: mapState(['isMenuVisible', 'user']),
+	data: function () {
+		return {
+			validatingToken: true
+		}
+	},
+	methods: {
+		async validateToken() {
+			this.validatingToken = true
+
+			const json = localStorage.getItem(userKey)
+			const userData = JSON.parse(json)
+			this.$store.commit('setUser', null)
+
+			if (!userData) {
+				this.validatingToken = false
+				return this.$router.push({ name: 'auth' })
+			}
+
+			const response = await axios.post(`${baseApiUrl}/validateToken`, userData)
+
+			if (response.data) {
+				this.$store.commit('setUser', userData)
+			} else {
+				localStorage.removeItem(userKey)
+				return this.$router.push({ name: 'auth' })
+			}
+
+			this.validatingToken = false
+		}
+	},
+	created() {
+		this.validateToken()
+	}
 }
 </script>
 
 <style>
-	* {
-		font-family: "Lato", sans-serif;
-	}
+* {
+	font-family: "Lato", sans-serif;
+}
 
-	body {
-		margin: 0;
-	}
+body {
+	margin: 0;
+}
 
-	#app {
-		-webkit-font-smoothing: antialised;
-		-moz-osx-font-smoothing: grayscale;
-		height: 100vh;
-		display: grid;
-		grid-template-rows: 60px 1fr 40px;
-		grid-template-columns: 300px 1fr;
-		grid-template-areas:
-			"header header"
-			"menu content"
-			"menu footer";
-	}
+#app {
+	-webkit-font-smoothing: antialised;
+	-moz-osx-font-smoothing: grayscale;
+	height: 100vh;
+	display: grid;
+	grid-template-rows: 60px 1fr 40px;
+	grid-template-columns: 300px 1fr;
+	grid-template-areas:
+		"header header"
+		"menu content"
+		"menu footer";
+}
 
-	#app.hide-menu {
-		grid-template-areas:
-			"header header"
-			"content content"
-			"footer footer";
-	}
+#app.hide-menu {
+	grid-template-areas:
+		"header header"
+		"content content"
+		"footer footer";
+}
 </style>

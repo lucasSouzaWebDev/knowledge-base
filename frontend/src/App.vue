@@ -46,7 +46,7 @@ export default {
 				this.$store.commit('setUser', userData)
 			} else {
 				localStorage.removeItem(userKey)
-				return this.$router.push({ name: 'auth' })
+				this.$router.push({ name: 'auth' })
 			}
 
 			this.validatingToken = false
